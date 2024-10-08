@@ -9,7 +9,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(self.create_html().encode())
-        elif self.path.startswith('/Dogs/'):
+        elif self.path.startswith('/dogs/'):
             # Serve images directly from the Dogs folder
             return super().do_GET()
         else:
@@ -18,7 +18,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
     def create_html(self):
         # Get list of images from the Dogs folder
-        image_folder = 'Dogs'  # Ensure this matches your folder name exactly
+        image_folder = 'dogs'  # Ensure this matches your folder name exactly
         images = [f for f in os.listdir(image_folder) if f.endswith(('.jpg', '.jpeg', '.png'))]
 
         # Check if there are any images
