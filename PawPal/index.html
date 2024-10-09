@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAWpal</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #dogImage {
+      max-width: 100%;
+      max-height: 80vh;
+      display: none;
+    }
+    #clickText {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="clickText">Click to see a new innocent dog looking at you</div>
+  <img id="dogImage" src="" alt="Innocent dog">
+  <script>
+    const dogFolder = 'Dogs';  // Folder containing your dog images
+    let images = [];
+    
+    // Fetch all images dynamically
+    function fetchImages() {
+      return fetch(dogFolder)
+        .then(response => response.text())
+        .then(text => {
+          const parser = new DOMParser();
+          const html = parser.parseFromString(text, 'text/html');
+          const links = Array.from(html.querySelectorAll('a'));
+          images = links
+            .map(link => link.href)
+            .filter(link => link.match(/\.(jpg|jpeg|png|gif)$/));
+        });
+    }
+
+    function showRandomDogImage() {
+      if (images.length === 0) return;
+      const randomIndex = Math.floor(Math.random() * images.length);
+      const imageUrl = images[randomIndex];
+      const dogImage = document.getElementById('dogImage');
+      const clickText = document.getElementById('clickText');
+      dogImage.src = imageUrl;
+      dogImage.style.display = 'block';
+      clickText.style.display = 'none';
+    }
+
+    document.getElementById('clickText').addEventListener('click', showRandomDogImage);
+
+    // Preload images once the page loads
+    window.onload = fetchImages;
+  </script>
+</body>
+</html>
